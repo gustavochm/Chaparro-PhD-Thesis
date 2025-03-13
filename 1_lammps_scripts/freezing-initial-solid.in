@@ -1,0 +1,105 @@
+# Required input variables in command line
+# -var dt = timestep
+# -var rc = cutoff radius for Mie Potential
+# -var lrep = repulsive exponent for Mie Potential
+# -var latt = attractive exponent for Mie Potential
+# -var T0 = Initial Dimensionless Temperature = T (K) / (eps/kB) (lower)
+# -var rhoad0 = initial dimensionless density
+# -var Nequilibration = number of equilibration steps
+# -var Tdamp = temperature damping parameter
+# -var Nevery = frequency of sampling for averaging
+# -var Nrepeat = number of samples for averaging
+# -var Nfreq = frequency of output for averaging
+# -var folder = path where to save output files
+
+
+#---------------------------------------------------------------------------------#
+#------------------------------ Type of simulation -------------------------------#
+#---------------------------------------------------------------------------------#
+units		lj			# reduced units
+boundary	p p p			# periodic in x, y, z directions
+dimension	3			# 3-D simulation
+atom_style	full			# set of interacting molecules
+timestep ${dt} #
+thermo 5000 # print thermo output each these steps
+
+#---------------------------------------------------------------------------------#
+#------------------------------- System Variable ---------------------------------#
+#---------------------------------------------------------------------------------#
+
+variable Nrdfe equal 100      # Nevery for RDF (fix ave/time)
+variable Nrdfw equal 1000     # Nwrite for RDF (compute rdf/ext: write every (Nrdfw*Nrdfe))
+variable binnum equal 2000    # Number of bins for RDF
+
+variable nMolecule equal 2048 # number of molecules in the system
+
+#---------------------------------------------------------------------------------#
+#----------------------------- System & Force field ------------------------------#
+#---------------------------------------------------------------------------------#
+
+variable eps equal 1. # energy for Mie Potential (K)
+variable sigma equal 1. # diameter in Mie Potential (Amstrong)
+variable rcut equal ${rc}*${sigma}  # cut-off radius set to 5*sigma (Amstrong)
+
+#---------------------------------------------------------------------------------#
+#-------------------------------- Creating Box -----------------------------------#
+#---------------------------------------------------------------------------------#
+variable X equal ${sigma}*(${nMolecule}/${rhoad0})^(1/3)
+lattice fcc ${rhoad0}
+region sym block 0 ${X} 0 ${X} 0 ${X} units box
+create_box 1 sym
+create_atoms 1 region sym
+
+#---------------------------------------------------------------------------------#
+#------------------------------ Defining Molecule --------------------------------#
+#---------------------------------------------------------------------------------#
+
+mass 1 1 # mass of 1
+pair_style	mie/cut	${rcut}		# type of pair interactions and cutoff
+# Mie potential    i  j eps   sigma  Lrep    Latt
+pair_coeff      1  1   ${eps}		${sigma}	 ${lrep} ${latt}  #
+group		MieMolecule   type	1	# name type 1 atoms with the MieMolecule label
+
+#---------------------------------------------------------------------------------#
+#----------------------------- Minimization Process-------------------------------#
+#---------------------------------------------------------------------------------#
+
+minimize 1.0e-4 1.0e-6 1000 10000
+reset_timestep 0
+
+#---------------------------------------------------------------------------------#
+#--------------------------------- NVT emsemble ----------------------------------#
+#---------------------------------------------------------------------------------#
+
+thermo_style custom  step cpu temp etotal press density ke pe
+velocity all create ${T0} 7432329
+
+variable PRES equal press
+variable TEMP equal temp
+variable TENE equal etotal
+variable DENS equal density
+variable KENE equal ke
+variable PENE equal pe
+
+variable P1 equal press
+variable StepAverage equal floor(0.8*${Nequilibration})
+fix Pave1 all ave/time 1 ${StepAverage} ${Nequilibration} v_P1 file ${folder}/solid_pressure.lammps
+
+compute myRDF all rdf 200
+fix RDF all ave/time 1 ${StepAverage} ${Nequilibration} c_myRDF[*] file ${folder}/rdf_initial_solid.lammps mode vector
+
+fix averages all ave/time ${Nevery} ${Nrepeat} ${Nfreq} v_TENE v_TEMP v_PRES v_DENS v_KENE v_PENE v_nMolecule file ${folder}/initial_solid.lammps
+
+fix integrate all nvt temp ${T0} ${T0} ${Tdamp}
+run ${Nequilibration}
+unfix integrate
+unfix averages
+
+variable PresNew_aux equal f_Pave1
+variable PresNew equal 1.0*${PresNew_aux}
+unfix Pave1
+variable P1 delete
+unfix RDF
+
+write_data ${folder}/data.initial_solid
+

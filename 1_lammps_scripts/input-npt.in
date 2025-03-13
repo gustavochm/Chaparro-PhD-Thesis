@@ -1,0 +1,94 @@
+# Required input variables in command line
+# -var dt = timestep
+# -var initial_data = path to initial data file
+# -var lrep = repulsive exponent for Mie Potential
+# -var latt = attractive exponent for Mie Potential
+# -var Tad = Dimensionless Temperature = T (K) / (eps/kB)
+# -var Press_NVT = pressure obtained from the NVT ensemble
+# -var Tdamp = thermostat constant
+# -var Pdamp = pressuressure constant
+# -var Nequilibration_NVT_short = number of equilibria steps nvt (small amount)
+# -var Nequilibration_NPT = number of equilibria steps npt
+# -var Nproduction_NPT = number of equilibria steps npt
+# -var folder = path where to save output files
+# -var npt_data_file = path to the data output file
+
+#---------------------------------------------------------------------------------#
+#------------------------------ Type of simulation -------------------------------#
+#---------------------------------------------------------------------------------#
+units		lj			# reduced units
+boundary	p p p			# periodic in x, y, z directions
+dimension	3			# 3-D simulation
+atom_style	full			# set of interacting molecules
+timestep ${dt} #
+thermo 5000 # print thermo output each these steps
+
+#---------------------------------------------------------------------------------#
+#------------------------------- System Variable ---------------------------------#
+#---------------------------------------------------------------------------------#
+
+variable nMolecule equal 4000 # number of molecules in the system
+
+#---------------------------------------------------------------------------------#
+#----------------------------- System & Force field ------------------------------#
+#---------------------------------------------------------------------------------#
+
+variable eps equal 1. # energy for Mie Potential (K)
+variable sigma equal 1. # diameter in Mie Potential (Amstrong)
+variable rcut equal 5*${sigma}  # cut-off radius set to 6*sigma (Amstrong)
+
+#---------------------------------------------------------------------------------#
+#-------------------------------- Creating Box -----------------------------------#
+#---------------------------------------------------------------------------------#
+read_data ${initial_data}
+
+#---------------------------------------------------------------------------------#
+#------------------------------ Defining Molecule --------------------------------#
+#---------------------------------------------------------------------------------#
+
+mass 1 1 # mass of 1
+pair_style	mie/cut	${rcut}		# type of pair interactions and cutoff
+# Mie potential    i  j eps   sigma  Lrep    Latt
+pair_coeff      1  1   ${eps}		${sigma}	 ${lrep} ${latt}  #
+# create_atoms 1 random ${nMolecule} ${seedposition} sym
+group		MieMolecule   type	1	# name type 1 atoms with the MieMolecule label
+
+
+#---------------------------------------------------------------------------------#
+#--------------------------------- NVT emsemble ----------------------------------#
+#---------------------------------------------------------------------------------#
+
+thermo_style custom  step cpu temp etotal press density ke pe
+variable Temp equal ${Tad} # Dimensionless Temperature
+
+# running equilibration in NVT
+fix integrate all nvt temp ${Temp} ${Temp} ${Tdamp}
+run ${Nequilibration_NVT_short}
+unfix integrate
+
+#---------------------------------------------------------------------------------#
+#--------------------------------- NPT emsemble ----------------------------------#
+#---------------------------------------------------------------------------------#
+
+variable PRES equal press
+variable TEMP equal temp
+variable TENE equal etotal
+variable DENS equal density
+variable KENE equal ke
+variable PENE equal pe
+variable ENTH equal enthalpy
+variable VOL equal vol
+
+reset_timestep 0
+fix integrate all npt temp ${Temp} ${Temp} ${Tdamp} iso ${Press_NVT} ${Press_NVT} ${Pdamp}
+run ${Nequilibration_NPT}
+unfix integrate
+
+reset_timestep 0
+fix averages_npt all ave/time 1 1 1000 v_TENE v_TEMP v_PRES v_DENS v_nMolecule v_KENE v_PENE v_ENTH v_VOL file ${folder}/nptave.lammps
+fix integrate all npt temp ${Temp} ${Temp} ${Tdamp} iso ${Press_NVT} ${Press_NVT} ${Pdamp}
+run ${Nproduction_NPT}
+unfix integrate
+unfix averages_npt
+
+write_data ${npt_data_file}

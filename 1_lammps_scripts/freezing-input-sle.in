@@ -1,0 +1,150 @@
+# Required input variables in command line
+# -var folder = path where to save output files
+# -var lrep = repulsive exponent for Mie Potential
+# -var latt = attractive exponent for Mie Potential
+# -var dt = timestep
+# -var rc = cutoff radius for Mie Potential
+# -var initial_data = path to initial data file
+# -var to_delete = fraction of particles to delete in fluid region
+# -var T_sle = temperature for solid-liquid equilibrium
+# -var Tdamp = temperature damping parameter
+# -var Ndump = frequency of saving a dump file of the simulation
+# -var Nevery = frequency of sampling for averaging
+# -var Nrepeat = number of samples for averaging
+# -var Nfreq = frequency of averaging
+# -var average_freeze_file = file to save averages during freezing
+# -var Nequilibration = number of equilibration steps
+# -var average_coexistence_file = file to save averages during coexistence
+# -var Nevery_density = frequency of sampling for density profile
+# -var Nrepeat_density = number of samples for density profile
+# -var Nfreq_density = frequency of density profile sampling
+# -var density_profile_file = file to save density profile
+# -var Nfreeze = number of steps for freezing
+# -var Ncoexistence = number of steps for coexistence
+
+#---------------------------------------------------------------------------------#
+#------------------------------ Type of simulation -------------------------------#
+#---------------------------------------------------------------------------------#
+units		lj			# reduced units
+boundary	p p p			# periodic in x, y, z directions
+dimension	3			# 3-D simulation
+atom_style	full			# set of interacting molecules
+timestep ${dt} #
+thermo 5000 # print thermo output each these steps
+
+#---------------------------------------------------------------------------------#
+#----------------------------- System & Force field ------------------------------#
+#---------------------------------------------------------------------------------#
+
+variable eps equal 1. # energy for Mie Potential (K)
+variable sigma equal 1. # diameter in Mie Potential (Amstrong)
+variable rcut equal ${rc}*${sigma}  # cut-off radius set to 5*sigma (Amstrong)
+
+#---------------------------------------------------------------------------------#
+#-------------------------------- Creating Box -----------------------------------#
+#---------------------------------------------------------------------------------#
+
+read_data ${initial_data}
+# replicating the simulation 4 times in the "z" direction
+variable z_replicates equal 4
+variable original_num_particles equal count(all)
+variable particles_to_delete equal (${z_replicates}/2)*floor(${to_delete}*${original_num_particles}+1)
+variable final_num_particles equal (${original_num_particles}-${particles_to_delete})
+print "Original number of particles is: ${original_num_particles}"
+print "Particles to delete: ${particles_to_delete}"
+replicate 1 1 ${z_replicates}
+
+#---------------------------------------------------------------------------------#
+#------------------------------ Defining Molecule --------------------------------#
+#---------------------------------------------------------------------------------#
+
+mass 1 1 # mass of 1
+pair_style	mie/cut	${rcut}		# type of pair interactions and cutoff
+# Mie potential    i  j eps   sigma  Lrep    Latt
+pair_coeff      1  1   ${eps}		${sigma}	 ${lrep} ${latt}  #
+group		MieMolecule   type	1	# name type 1 atoms with the MieMolecule label
+
+variable xlo equal xlo
+variable xhi equal xhi
+variable ylo equal ylo
+variable yhi equal yhi
+variable zlo equal zlo
+variable zhi equal zhi
+variable zhi_half equal ${zhi}/2
+variable zbox equal ${zhi}-${zlo}
+
+print "Box dimensions in x: ${xlo} to ${xhi}"
+print "Box dimensions in y: ${ylo} to ${yhi}"
+print "Box dimensions in z: ${zlo} to ${zhi}"
+
+region solid_region block ${xlo} ${xhi} ${ylo} ${yhi} ${zlo} ${zhi_half} units box
+region fluid_region block ${xlo} ${xhi} ${ylo} ${yhi} ${zhi_half} ${zhi} units box
+group solid_particles region solid_region
+group fluid_particles region fluid_region
+
+#---------------------------------------------------------------------------------#
+#--------------------------------- NVT emsemble ----------------------------------#
+#---------------------------------------------------------------------------------#
+
+thermo_style custom  step cpu temp etotal press pzz pxx pyy density ke pe
+
+variable PRES equal press
+variable PRESZZ equal pzz
+variable PRESXX equal pxx
+variable PRESYY equal pyy
+variable TEMP equal temp
+variable TENE equal etotal
+variable DENS equal density
+variable KENE equal ke
+variable PENE equal pe
+
+# creating velocity for each one of the particles
+velocity fluid_particles create ${T_sle} 42
+# 1. Deleting particles in the fluid phase
+delete_atoms random count ${particles_to_delete} no fluid_particles fluid_region 42 compress no
+# 1. Freezing the solid particles
+velocity solid_particles set 0.0 0.0 0.0 
+fix freeze_solid solid_particles setforce 0.0 0.0 0.0 
+# reset_atoms id sort yes
+velocity fluid_particles zero linear
+
+dump dump_solid solid_particles atom ${Ndump} ${folder}/dump_solid_freeze.lammpstrj
+dump dump_fluid fluid_particles atom ${Ndump} ${folder}/dump_fluid_freeze.lammpstrj
+fix averages all ave/time ${Nevery} ${Nrepeat} ${Nfreq} v_TENE v_TEMP v_PRES v_PRESZZ v_PRESXX v_PRESYY v_DENS v_KENE v_PENE v_zbox file ${average_freeze_file}
+fix integrate all nvt temp ${T_sle} ${T_sle} ${Tdamp}
+run ${Nfreeze}
+unfix integrate
+unfix averages
+
+# unfreezing solid particles
+unfix freeze_solid
+
+# reseting the linear momentum (trying to avoid the system to move as a block)
+velocity all zero linear
+# fix to center the simulation center of mass (do not affect the dynamics of the system)
+# fix center_sim all recenter NULL NULL 0.5 units fraction
+
+# equilibrating the simulation when solid molecules are unfrozen
+fix integrate all nvt temp ${T_sle} ${T_sle} ${Tdamp}
+run ${Nequilibration}
+unfix integrate
+# reseting the linear momentum (trying to avoid the system to move as a block)
+velocity all zero linear
+# fix to center the simulation center of mass (do not affect the dynamics of the system)
+# fix center_sim all recenter NULL NULL 0.5 units fraction
+
+# production stage of the simulation
+# averages for the coexistence part
+fix averages all ave/time ${Nevery} ${Nrepeat} ${Nfreq} v_TENE v_TEMP v_PRES v_PRESZZ v_PRESXX v_PRESYY v_DENS v_KENE v_PENE v_zbox file ${average_coexistence_file}
+
+# getting density profile
+compute bins all chunk/atom bin/1d z lower 0.01 units reduced
+# fix histo_density all ave/chunk 10 1000 100000 bins density/mass file ${density_profile_file}
+fix histo_density all ave/chunk ${Nevery_density} ${Nrepeat_density} ${Nfreq_density} bins density/mass file ${density_profile_file}
+
+dump dump_all all atom ${Ndump} ${folder}/dump_coexistence.lammpstrj
+
+fix integrate all nvt temp ${T_sle} ${T_sle} ${Tdamp}
+run ${Ncoexistence}
+unfix integrate
+unfix averages

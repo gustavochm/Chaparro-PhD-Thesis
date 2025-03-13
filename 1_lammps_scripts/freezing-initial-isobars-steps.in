@@ -1,0 +1,100 @@
+# Required input variables in command line
+# -var dt = timestep
+# -var rc = cutoff radius for Mie Potential
+# -var initial_data = path to the initial data file
+# -var lrep = repulsive exponent for Mie Potential
+# -var latt = attractive exponent for Mie Potential
+# -var Nevery = frequency of time steps for averaging
+# -var Nrepeat = number of repetitions for averaging
+# -var Nfreq = frequency of averaging output
+# -var current_temp = current temperature for NVT/NPT ensemble
+# -var Tdamp = temperature damping parameter
+# -var solidpress = pressure for NPT ensemble
+# -var Pdamp = pressure damping parameter
+# -var averages_file = path to the averages output file
+# -var steps_per_point = number of steps per point in the run
+# -var rdf_steps = number of steps for RDF calculation
+# -var rdf_file = path to the RDF output file
+# -var data_file = path to the data output file
+
+#---------------------------------------------------------------------------------#
+#------------------------------ Type of simulation -------------------------------#
+#---------------------------------------------------------------------------------#
+units		lj			# reduced units
+boundary	p p p			# periodic in x, y, z directions
+dimension	3			# 3-D simulation
+atom_style	full			# set of interacting molecules
+timestep ${dt} #
+thermo 5000 # print thermo output each these steps
+
+#---------------------------------------------------------------------------------#
+#------------------------------- System Variable ---------------------------------#
+#---------------------------------------------------------------------------------#
+
+variable Nrdfe equal 100      # Nevery for RDF (fix ave/time)
+variable Nrdfw equal 1000     # Nwrite for RDF (compute rdf/ext: write every (Nrdfw*Nrdfe))
+variable binnum equal 2000    # Number of bins for RDF
+
+variable nMolecule equal 2048 # number of molecules in the system
+
+#---------------------------------------------------------------------------------#
+#----------------------------- System & Force field ------------------------------#
+#---------------------------------------------------------------------------------#
+
+variable eps equal 1. # energy for Mie Potential (K)
+variable sigma equal 1. # diameter in Mie Potential (Amstrong)
+variable rcut equal ${rc}*${sigma}  # cut-off radius set to 5*sigma (Amstrong)
+
+#---------------------------------------------------------------------------------#
+#-------------------------------- Creating Box -----------------------------------#
+#---------------------------------------------------------------------------------#
+
+# variable X equal ${sigma}*(${nMolecule}/${rhoad0})^(1/3)
+# lattice bcc ${rhoad0}
+# region sym block 0 ${X} 0 ${X} 0 ${X} units box
+# create_box 1 sym
+# create_atoms 1 region sym
+read_data ${initial_data}
+
+#---------------------------------------------------------------------------------#
+#------------------------------ Defining Molecule --------------------------------#
+#---------------------------------------------------------------------------------#
+
+mass 1 1 # mass of 1
+pair_style	mie/cut	${rcut}		# type of pair interactions and cutoff
+# Mie potential    i  j eps   sigma  Lrep    Latt
+pair_coeff      1  1   ${eps}		${sigma}	 ${lrep} ${latt}  #
+# create_atoms 1 random ${nMolecule} ${seedposition} sym
+group		MieMolecule   type	1	# name type 1 atoms with the MieMolecule label
+
+#---------------------------------------------------------------------------------#
+#--------------------------------- NVT emsemble ----------------------------------#
+#---------------------------------------------------------------------------------#
+
+thermo_style custom  step cpu temp etotal press density ke pe
+
+variable PRES equal press
+variable TEMP equal temp
+variable TENE equal etotal
+variable DENS equal density
+variable KENE equal ke
+variable PENE equal pe
+
+compute myRDF all rdf 200
+
+fix averages all ave/time ${Nevery} ${Nrepeat} ${Nfreq} v_TENE v_TEMP v_PRES v_DENS v_KENE v_PENE v_nMolecule file ${averages_file}
+fix integrate all npt temp ${current_temp} ${current_temp} ${Tdamp} iso ${solidpress} ${solidpress} ${Pdamp}
+run ${steps_per_point}
+unfix integrate
+unfix averages
+
+variable StepAverage equal floor(0.8*${rdf_steps})
+fix RDF all ave/time 1 ${StepAverage} ${rdf_steps} c_myRDF[*] file ${rdf_file} mode vector
+fix integrate all nvt temp ${current_temp} ${current_temp} ${Tdamp}
+run ${rdf_steps}
+unfix integrate
+unfix RDF
+
+write_data ${data_file}
+
+
