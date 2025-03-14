@@ -1,6 +1,5 @@
 # Folders to ignore
-# TrainingPVTandVirialSolid/
-
+/python_helpers/data_figures/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
