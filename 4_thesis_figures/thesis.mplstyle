@@ -1,0 +1,26 @@
+# Global fontsizes
+figure.labelsize : 10
+figure.titlesize : 10
+
+axes.labelsize : 10
+axes.titlesize : 10
+
+xtick.labelsize : 8
+ytick.labelsize : 8
+
+legend.fontsize : 8
+
+# Global font type
+text.usetex: True
+font.family : serif
+font.serif : Palatino
+
+# Font style for PDF and PS images
+pdf.fonttype : 42
+ps.fonttype : 42
+
+
+# Legend style
+grid.alpha : 0.1
+
+lines.markersize : 6
