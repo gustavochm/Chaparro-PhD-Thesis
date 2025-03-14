@@ -1,6 +1,6 @@
 # Folders to ignore
-/python_helpers/data_figures/*
-
+# /python_helpers/data_figures/*
+/4_thesis_figures
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

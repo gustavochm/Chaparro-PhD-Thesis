@@ -1,4 +1,4 @@
-# import data_figures
+from . import data_figures
 from . import feanneos
 from . import transport_properties
 from .helpers import helper_get_alpha
