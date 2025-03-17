@@ -1,0 +1,5 @@
+ \multirow{4}{2cm}{Nitrogen} & $\textnormal{OF}_1$ & 3.66 & 115.19 & 16.30 &  \cellcolor{lightgray!40} \textbf{1.15} &  \cellcolor{lightgray!40} 1.89 &  \cellcolor{lightgray!40} \textbf{2.67} &  63.69 &  39.02 &  7.79 &  15.49 &  \textbf{9.57} &  6.03 \\ 
+   & $\textnormal{OF}_2$ & 3.67 & 105.83 & 13.57 &  \cellcolor{lightgray!40} 3.03 &  \cellcolor{lightgray!40} 4.76 &  \cellcolor{lightgray!40} 2.69 &  53.82 &  11.14 &  1.58 &  \cellcolor{lightgray!40} \textbf{2.70} &  17.05 &  \textbf{4.56} \\ 
+   & $\textnormal{OF}_3$ & 3.62 & 101.64 & 12.39 &  \cellcolor{lightgray!40} 4.07 &  \cellcolor{lightgray!40} \textbf{1.71} &  \cellcolor{lightgray!40} 3.95 &  \cellcolor{lightgray!40} \textbf{46.49} &  \cellcolor{lightgray!40} 1.44 &  \cellcolor{lightgray!40} 0.59 &  5.31 &  16.91 &  6.70 \\ 
+   & $\textnormal{OF}_4$ & 3.63 & 103.34 & 12.94 &  \cellcolor{lightgray!40} 3.20 &  \cellcolor{lightgray!40} 2.17 &  \cellcolor{lightgray!40} 3.22 &  \cellcolor{lightgray!40} 49.29 &  \cellcolor{lightgray!40} \textbf{0.36} &  \cellcolor{lightgray!40} \textbf{0.41} &  \cellcolor{lightgray!40} 3.49 &  16.75 &  5.42 \\ 
+  

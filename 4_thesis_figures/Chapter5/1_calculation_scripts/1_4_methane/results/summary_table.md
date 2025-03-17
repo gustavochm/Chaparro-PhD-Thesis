@@ -1,0 +1,5 @@
+ \multirow{4}{2cm}{Methane} & $\textnormal{OF}_1$ & 3.78 & 162.32 & 14.20 &  \cellcolor{lightgray!40} \textbf{0.50} &  \cellcolor{lightgray!40} 3.35 &  \cellcolor{lightgray!40} \textbf{3.50} &  66.12 &  38.81 &  9.93 &  24.76 &  \textbf{3.16} &  \textbf{5.93} \\ 
+   & $\textnormal{OF}_2$ & 3.82 & 139.81 & 10.83 &  \cellcolor{lightgray!40} 5.25 &  \cellcolor{lightgray!40} 7.48 &  \cellcolor{lightgray!40} 4.58 &  38.33 &  9.82 &  \textbf{0.64} &  \cellcolor{lightgray!40} \textbf{2.47} &  12.27 &  9.11 \\ 
+   & $\textnormal{OF}_3$ & 3.76 & 139.96 & 10.68 &  \cellcolor{lightgray!40} 4.62 &  \cellcolor{lightgray!40} \textbf{3.29} &  \cellcolor{lightgray!40} 5.55 &  \cellcolor{lightgray!40} \textbf{35.94} &  \cellcolor{lightgray!40} \textbf{3.96} &  \cellcolor{lightgray!40} 0.89 &  6.92 &  8.31 &  10.04 \\ 
+   & $\textnormal{OF}_4$ & 3.80 & 140.09 & 10.77 &  \cellcolor{lightgray!40} 5.15 &  \cellcolor{lightgray!40} 5.88 &  \cellcolor{lightgray!40} 5.03 &  \cellcolor{lightgray!40} 38.00 &  \cellcolor{lightgray!40} 4.60 &  \cellcolor{lightgray!40} 0.76 &  \cellcolor{lightgray!40} 4.21 &  10.67 &  9.58 \\ 
+  

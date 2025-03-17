@@ -1,0 +1,5 @@
+ \multirow{4}{2cm}{Xenon} & $\textnormal{OF}_1$ & 4.00 & 245.07 & 14.00 &  \cellcolor{lightgray!40} 0.93 &  \cellcolor{lightgray!40} 3.21 &  \cellcolor{lightgray!40} 3.88 &  17.36 &  19.00 &  6.34 &  2.62 &  4.48 &  7.32 \\ 
+   & $\textnormal{OF}_2$ & 4.01 & 238.49 & 13.28 &  \cellcolor{lightgray!40} \textbf{0.42} &  \cellcolor{lightgray!40} 4.02 &  \cellcolor{lightgray!40} 2.98 &  \textbf{4.46} &  \textbf{7.13} &  4.10 &  \cellcolor{lightgray!40} \textbf{2.18} &  2.23 &  5.96 \\ 
+   & $\textnormal{OF}_3$ & 4.00 & 235.37 & 12.96 &  \cellcolor{lightgray!40} 1.00 &  \cellcolor{lightgray!40} 3.39 &  \cellcolor{lightgray!40} \textbf{2.48} &  \cellcolor{lightgray!40} 7.05 &  \cellcolor{lightgray!40} 7.34 &  \cellcolor{lightgray!40} \textbf{3.39} &  3.18 &  \textbf{1.76} &  \textbf{5.83} \\ 
+   & $\textnormal{OF}_4$ & 3.99 & 235.88 & 13.01 &  \cellcolor{lightgray!40} 1.67 &  \cellcolor{lightgray!40} \textbf{2.48} &  \cellcolor{lightgray!40} 2.62 &  \cellcolor{lightgray!40} 6.55 &  \cellcolor{lightgray!40} 7.46 &  \cellcolor{lightgray!40} 3.48 &  \cellcolor{lightgray!40} 2.48 &  2.31 &  5.88 \\ 
+  

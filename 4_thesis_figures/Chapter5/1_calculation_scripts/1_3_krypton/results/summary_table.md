@@ -1,0 +1,5 @@
+ \multirow{4}{2cm}{Krypton} & $\textnormal{OF}_1$ & 3.67 & 172.85 & 13.37 &  \cellcolor{lightgray!40} 0.92 &  \cellcolor{lightgray!40} 2.82 &  \cellcolor{lightgray!40} 3.42 &  8.47 &  2.92 &  1.69 &  2.52 &  14.44 &  5.12 \\ 
+   & $\textnormal{OF}_2$ & 3.68 & 169.42 & 12.89 &  \cellcolor{lightgray!40} \textbf{0.59} &  \cellcolor{lightgray!40} 3.86 &  \cellcolor{lightgray!40} 2.56 &  8.69 &  3.79 &  \textbf{0.31} &  \cellcolor{lightgray!40} 1.85 &  16.26 &  4.98 \\ 
+   & $\textnormal{OF}_3$ & 3.66 & 172.84 & 13.44 &  \cellcolor{lightgray!40} 1.77 &  \cellcolor{lightgray!40} \textbf{2.13} &  \cellcolor{lightgray!40} 2.63 &  \cellcolor{lightgray!40} \textbf{7.65} &  \cellcolor{lightgray!40} \textbf{0.36} &  \cellcolor{lightgray!40} 1.53 &  2.39 &  \textbf{14.29} &  4.58 \\ 
+   & $\textnormal{OF}_4$ & 3.67 & 172.66 & 13.44 &  \cellcolor{lightgray!40} 1.53 &  \cellcolor{lightgray!40} 3.11 &  \cellcolor{lightgray!40} \textbf{2.30} &  \cellcolor{lightgray!40} 7.98 &  \cellcolor{lightgray!40} 0.64 &  \cellcolor{lightgray!40} 1.40 &  \cellcolor{lightgray!40} \textbf{1.58} &  15.02 &  \textbf{4.37} \\ 
+  

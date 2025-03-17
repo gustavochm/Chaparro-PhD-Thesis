@@ -1,0 +1,5 @@
+ \multirow{4}{2cm}{Tetrafluoro-methane} & $\textnormal{OF}_1$ & 4.37 & 266.77 & 34.00 &  \cellcolor{lightgray!40} \textbf{4.10} &  \cellcolor{lightgray!40} \textbf{1.97} &  \cellcolor{lightgray!40} \textbf{1.55} &  933.33 &  --  &  --  &  44.85 &  \textbf{9.52} &  \textbf{10.15} \\ 
+   & $\textnormal{OF}_2$ & 4.40 & 191.17 & 12.59 &  \cellcolor{lightgray!40} 17.05 &  \cellcolor{lightgray!40} 11.01 &  \cellcolor{lightgray!40} 12.40 &  797.08 &  114.90 &  \textbf{6.93} &  \cellcolor{lightgray!40} \textbf{7.00} &  32.71 &  14.54 \\ 
+   & $\textnormal{OF}_3$ & 5.39 & 153.76 & 8.00 &  \cellcolor{lightgray!40} 68.21 &  \cellcolor{lightgray!40} 49.44 &  \cellcolor{lightgray!40} 15.32 &  \cellcolor{lightgray!40} \textbf{341.68} &  \cellcolor{lightgray!40} 14.80 &  \cellcolor{lightgray!40} 15.63 &  36.87 &  55.12 &  21.40 \\ 
+   & $\textnormal{OF}_4$ & 5.12 & 155.13 & 8.00 &  \cellcolor{lightgray!40} 65.04 &  \cellcolor{lightgray!40} 40.60 &  \cellcolor{lightgray!40} 15.63 &  \cellcolor{lightgray!40} 391.98 &  \cellcolor{lightgray!40} \textbf{14.61} &  \cellcolor{lightgray!40} 14.76 &  \cellcolor{lightgray!40} 28.27 &  49.46 &  21.90 \\ 
+  

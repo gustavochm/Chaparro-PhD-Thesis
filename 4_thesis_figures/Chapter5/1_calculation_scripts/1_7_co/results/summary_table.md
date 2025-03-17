@@ -1,0 +1,5 @@
+ \multirow{4}{2cm}{Carbon Monoxide} & $\textnormal{OF}_1$ & 3.69 & 126.29 & 17.89 &  \cellcolor{lightgray!40} \textbf{0.98} &  \cellcolor{lightgray!40} \textbf{1.46} &  \cellcolor{lightgray!40} \textbf{2.65} &  119.23 &  42.30 &  5.77 &  13.16 &  \textbf{3.07} &  8.70 \\ 
+   & $\textnormal{OF}_2$ & 3.63 & 115.70 & 14.20 &  \cellcolor{lightgray!40} 3.60 &  \cellcolor{lightgray!40} 2.34 &  \cellcolor{lightgray!40} 3.72 &  129.09 &  16.72 &  \textbf{0.31} &  \cellcolor{lightgray!40} 12.33 &  7.09 &  \textbf{5.61} \\ 
+   & $\textnormal{OF}_3$ & 3.65 & 108.96 & 12.60 &  \cellcolor{lightgray!40} 5.38 &  \cellcolor{lightgray!40} 1.91 &  \cellcolor{lightgray!40} 4.45 &  \cellcolor{lightgray!40} \textbf{83.66} &  \cellcolor{lightgray!40} 3.21 &  \cellcolor{lightgray!40} 3.88 &  17.36 &  13.24 &  5.88 \\ 
+   & $\textnormal{OF}_4$ & 3.57 & 109.52 & 12.55 &  \cellcolor{lightgray!40} 4.14 &  \cellcolor{lightgray!40} 6.74 &  \cellcolor{lightgray!40} 4.87 &  \cellcolor{lightgray!40} 86.93 &  \cellcolor{lightgray!40} \textbf{1.25} &  \cellcolor{lightgray!40} 3.16 &  \cellcolor{lightgray!40} \textbf{12.05} &  8.36 &  6.64 \\ 
+  
