@@ -240,6 +240,7 @@ rhoad_diff = df_diff['rho*'].to_numpy()
 Tad_diff = df_diff['T*'].to_numpy()
 Sres_diff = fun_dic['entropy_residual_fun'](alpha_diff, rhoad_diff, Tad_diff)
 df_diff['Sr'] = Sres_diff
+df_diff.to_csv(os.path.join(folder_to_save, 'mieparticle-diff.csv'))
 
 dbpath = "../../2_databases/mieparticle-visc.csv"
 df_visc = pd.read_csv(dbpath)
@@ -248,6 +249,8 @@ rhoad_visc = df_visc['rho*'].to_numpy()
 Tad_visc = df_visc['T*'].to_numpy()
 Sres_visc = fun_dic['entropy_residual_fun'](alpha_visc, rhoad_visc, Tad_visc)
 df_visc['Sr'] = Sres_visc
+df_visc.to_csv(os.path.join(folder_to_save, 'mieparticle-visc.csv'))
+
 
 dbpath = "../../2_databases/mieparticle-tcond.csv"
 df_tcond = pd.read_csv(dbpath)
@@ -256,6 +259,8 @@ rhoad_tcond = df_tcond['rho*'].to_numpy()
 Tad_tcond = df_tcond['T*'].to_numpy()
 Sres_tcond = fun_dic['entropy_residual_fun'](alpha_tcond, rhoad_tcond, Tad_tcond)
 df_tcond['Sr'] = Sres_tcond
+df_tcond.to_csv(os.path.join(folder_to_save, 'mieparticle-tcond.csv'))
+
 
 dict_md_data = {'self_diffusivity': df_diff, 'shear_viscosity': df_visc, 'thermal_conductivity': df_tcond}
 

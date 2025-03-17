@@ -14,17 +14,6 @@ from figures_parity_lit import plot_parity_tp_lit_data
 from figures_tp_dilute_ann_model import plot_dilute_limit_ann_model
 from figures_isotherms_tp_models import plot_isotherms_tp_anns
 
-import sys
-sys.path.append("../../../")
-import nest_asyncio
-nest_asyncio.apply()
-from jax.config import config
-config.update("jax_enable_x64", True)
-from flax.training import checkpoints
-from python_helpers import helper_get_alpha
-from python_helpers.feanneos import HelmholtzModel
-from python_helpers.feanneos import helper_jitted_funs
-
 
 # figure style
 plt.style.use('seaborn-v0_8-colorblind')
@@ -42,55 +31,20 @@ width_three_columns = 17.  # cm
 dpi = 400
 format = 'pdf'
 
-######################
-# Loading FE-ANN EoS #
-######################
-
-ckpt_folder = '../../../3_ann_models/feann_eos'
-
-prefix_params = 'FE-ANN-EoS-params_'
-
-###
-Tscale = 'Tinv'
-seed = 1
-factor = 0.05
-EPOCHS = 20000
-traind_model_folder = f'models_{Tscale}_factor{factor:.2f}_seed{seed}'
-ckpt_folder_model = os.path.join(ckpt_folder, traind_model_folder)
-ckpt_Tinv = checkpoints.restore_checkpoint(ckpt_dir=ckpt_folder_model, target=None, prefix=prefix_params)
-helmholtz_features = list(ckpt_Tinv['features'].values())
-helmholtz_model = HelmholtzModel(features=helmholtz_features)
-helmholtz_params = {'params': ckpt_Tinv['params']}
-fun_dic = helper_jitted_funs(helmholtz_model, helmholtz_params)
 
 ###################
 # Loading TP data #
 ###################
 
 # reading the data
-dbpath = "../../../2_databases/mieparticle-diff.csv"
+dbpath = "../computed_files/mieparticle-diff.csv"
 df_diff = pd.read_csv(dbpath)
-alpha_diff = helper_get_alpha(df_diff['lr'].to_numpy(), df_diff['la'].to_numpy())
-rhoad_diff = df_diff['rho*'].to_numpy()
-Tad_diff = df_diff['T*'].to_numpy()
-Sres_diff = fun_dic['entropy_residual_fun'](alpha_diff, rhoad_diff, Tad_diff)
-df_diff['Sr'] = Sres_diff
 
-dbpath = "../../../2_databases/mieparticle-visc.csv"
+dbpath = "../computed_files/mieparticle-visc.csv"
 df_visc = pd.read_csv(dbpath)
-alpha_visc = helper_get_alpha(df_visc['lr'].to_numpy(), df_visc['la'].to_numpy())
-rhoad_visc = df_visc['rho*'].to_numpy()
-Tad_visc = df_visc['T*'].to_numpy()
-Sres_visc = fun_dic['entropy_residual_fun'](alpha_visc, rhoad_visc, Tad_visc)
-df_visc['Sr'] = Sres_visc
 
-dbpath = "../../../2_databases/mieparticle-tcond.csv"
+dbpath = "../computed_files/mieparticle-tcond.csv"
 df_tcond = pd.read_csv(dbpath)
-alpha_tcond = helper_get_alpha(df_tcond['lr'].to_numpy(), df_tcond['la'].to_numpy())
-rhoad_tcond = df_tcond['rho*'].to_numpy()
-Tad_tcond = df_tcond['T*'].to_numpy()
-Sres_tcond = fun_dic['entropy_residual_fun'](alpha_tcond, rhoad_tcond, Tad_tcond)
-df_tcond['Sr'] = Sres_tcond
 dict_md_data = {'self_diffusivity': df_diff, 'shear_viscosity': df_visc, 'thermal_conductivity': df_tcond}
 
 # literature data
